@@ -19,7 +19,7 @@ router.get(
 
 router.get(
   "/:id",
-  auth(Role.ADMIN, Role.TECHNICIAN),
+  auth(Role.ADMIN),
   UserController.getSingleUser
 );
 
