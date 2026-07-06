@@ -1,0 +1,19 @@
+model Availability {
+  id String @id @default(uuid())
+
+  technicianId String
+  technician TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  day Day
+
+  startTime String // Example: "09:00"
+  endTime   String // Example: "17:00"
+
+  isAvailable Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([technicianId])
+  @@index([day])
+}
