@@ -28,25 +28,42 @@ const register = async (payload: TRegisterUser) => {
 
   const hashedPassword = await bcrypt.hash(payload.password, 10);
 
-  const result = await prisma.user.create({
-    data: {
-      name: payload.name,
-      email: payload.email,
-      password: hashedPassword,
-      role: payload.role,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      status: true,
-      createdAt: true,
-    },
+  const result = await prisma.$transaction(async (tx) => {
+    // Create User
+    const user = await tx.user.create({
+      data: {
+        name: payload.name,
+        email: payload.email,
+        password: hashedPassword,
+        role: payload.role,
+      },
+    });
+
+    // Create Technician Profile
+    if (payload.role === Role.TECHNICIAN) {
+      await tx.technicianProfile.create({
+        data: {
+          userId: user.id,
+          bio: "",
+          experience: 0,
+          location: "Not Set", // অথবা payload.location ব্যবহার করতে পারো
+        },
+      });
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      createdAt: user.createdAt,
+    };
   });
 
   return result;
 };
+
 
 const login = async (payload: TLoginUser) => {
   const user = await prisma.user.findUnique({

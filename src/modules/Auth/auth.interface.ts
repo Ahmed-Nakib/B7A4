@@ -5,6 +5,7 @@ export type TRegisterUser = {
   email: string;
   password: string;
   role: Role;
+  location?: string;
 };
 export interface TLoginUser {
   email: string;

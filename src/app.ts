@@ -5,6 +5,7 @@ import config from "./config";
 import { userRoutes } from "./modules/user/user.route";
 import { AuthRoutes } from "./modules/Auth/auth.route";
 import { CategoryRoutes } from "./modules/category/category.route";
+import { TechnicianRoutes } from "./modules/Technician/technician.route";
 
 
 const app : Application = express();
@@ -23,5 +24,6 @@ app.use(cors({
 app.use("/api/users", userRoutes)
 app.use("/api/auth", AuthRoutes)
 app.use("/api/categories", CategoryRoutes)
+app.use("/api/technician", TechnicianRoutes)
 
 export default app;
