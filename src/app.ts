@@ -19,7 +19,7 @@ app.use(cors({
 }))
 
 
-app.use("/api/users", userRoutes)
 app.use("/api/auth", AuthRoutes)
+app.use("/api/users", userRoutes)
 
 export default app;
