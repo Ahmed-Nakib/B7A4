@@ -1,0 +1,128 @@
+import { Request, Response } from "express";
+import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
+import { AdminService } from "./admin.service";
+import { UserStatus } from "../../../generated/prisma/enums";
+
+
+
+const getAllUsers = catchAsync(
+  async (_req: Request, res: Response) => {
+
+    const result = await AdminService.getAllUsers();
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Users retrieved successfully",
+      data: result,
+    });
+
+  }
+);
+
+
+
+
+const updateUserStatus = catchAsync(
+  async (req: Request, res: Response) => {
+
+    const result =
+      await AdminService.updateUserStatus(
+        req.params.id as string,
+        req.body.status as UserStatus
+      );
+
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "User status updated successfully",
+      data: result,
+    });
+
+  }
+);
+
+
+
+
+
+
+const getAllBookings = catchAsync(
+  async (_req: Request, res: Response) => {
+
+    const result =
+      await AdminService.getAllBookings();
+
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Bookings retrieved successfully",
+      data: result,
+    });
+
+  }
+);
+
+
+
+
+
+
+const getCategories = catchAsync(
+  async (_req: Request, res: Response) => {
+
+    const result =
+      await AdminService.getCategories();
+
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Categories retrieved successfully",
+      data: result,
+    });
+
+  }
+);
+
+
+
+
+
+
+const createCategory = catchAsync(
+  async (req: Request, res: Response) => {
+
+    const result =
+      await AdminService.createCategory(
+        req.body
+      );
+
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "Category created successfully",
+      data: result,
+    });
+
+  }
+);
+
+
+
+
+
+
+export const AdminController = {
+
+  getAllUsers,
+  updateUserStatus,
+  getAllBookings,
+  getCategories,
+  createCategory,
+
+};

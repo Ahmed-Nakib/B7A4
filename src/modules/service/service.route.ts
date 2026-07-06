@@ -5,16 +5,8 @@ import { ServiceController } from "./service.controller";
 
 const router = Router();
 
-// Public
+// Public Routes
 router.get("/", ServiceController.getServices);
-router.get("/:id", ServiceController.getSingleService);
-
-// Technician
-router.post(
-  "/",
-  auth(Role.TECHNICIAN),
-  ServiceController.createService
-);
 
 router.get(
   "/my-services",
@@ -22,7 +14,16 @@ router.get(
   ServiceController.getMyServices
 );
 
-router.put(
+router.get("/:id", ServiceController.getSingleService);
+
+// Technician Routes
+router.post(
+  "/",
+  auth(Role.TECHNICIAN),
+  ServiceController.createService
+);
+
+router.patch(
   "/:id",
   auth(Role.TECHNICIAN),
   ServiceController.updateService

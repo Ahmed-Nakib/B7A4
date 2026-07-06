@@ -1,0 +1,51 @@
+import { Router } from "express";
+import auth from "../../middleware/auth";
+import { Role } from "../../../generated/prisma/enums";
+import { AdminController } from "./admin.controller";
+
+
+const router = Router();
+
+
+
+router.get(
+  "/users",
+  auth(Role.ADMIN),
+  AdminController.getAllUsers
+);
+
+
+
+router.patch(
+  "/users/:id",
+  auth(Role.ADMIN),
+  AdminController.updateUserStatus
+);
+
+
+
+router.get(
+  "/bookings",
+  auth(Role.ADMIN),
+  AdminController.getAllBookings
+);
+
+
+
+router.get(
+  "/categories",
+  auth(Role.ADMIN),
+  AdminController.getCategories
+);
+
+
+
+router.post(
+  "/categories",
+  auth(Role.ADMIN),
+  AdminController.createCategory
+);
+
+
+
+export const AdminRoutes = router;

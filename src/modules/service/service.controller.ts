@@ -29,7 +29,7 @@ const getServices = catchAsync(async (_req: Request, res: Response) => {
 });
 
 const getSingleService = catchAsync(async (req: Request, res: Response) => {
-  const result = await ServiceService.getSingleService(req.params.id);
+  const result = await ServiceService.getSingleService(req.params.id as string);
 
   sendResponse(res, {
     success: true,
@@ -66,16 +66,13 @@ const updateService = catchAsync(async (req: any, res: Response) => {
 });
 
 const deleteService = catchAsync(async (req: any, res: Response) => {
-  const result = await ServiceService.deleteService(
-    req.user.id,
-    req.params.id
-  );
+  await ServiceService.deleteService(req.user.id, req.params.id);
 
   sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "Service deleted successfully",
-    data: result,
+    data: null,
   });
 });
 
