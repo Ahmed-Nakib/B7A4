@@ -28,10 +28,10 @@ app.use(cors({
 app.use("/api/auth", AuthRoutes)
 app.use("/api/categories", CategoryRoutes)
 app.use("/api/technician", TechnicianRoutes)
-app.use("/api/booking", BookingRoutes)
-app.use("/api/service", ServiceRoutes)
-app.use("/api/payment", PaymentRoutes)
+app.use("/api/bookings", BookingRoutes)
+app.use("/api/services", ServiceRoutes)
+app.use("/api/payments", PaymentRoutes)
 app.use("/api/admin", AdminRoutes)
-app.use("/api/review", ReviewRoutes)
+app.use("/api/reviews", ReviewRoutes)
 
 export default app;
