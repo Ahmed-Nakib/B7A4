@@ -33,10 +33,10 @@ router.patch(
 );
 
 // Technician
-router.patch(
-  "/:id/status",
-  auth(Role.TECHNICIAN),
-  BookingController.updateBookingStatus
-);
+// router.patch(
+//   "/:id/status",
+//   auth(Role.TECHNICIAN),
+//   BookingController.updateBookingStatus
+// );
 
 export const BookingRoutes = router;

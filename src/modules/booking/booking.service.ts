@@ -3,7 +3,6 @@ import { prisma } from "../../lib/prisma";
 import {
   TCreateBooking,
 } from "./booking.interface";
-import { TUpdateBookingStatus } from "./booking.interface";
 
 const createBooking = async (
   customerId: string,
@@ -199,76 +198,10 @@ const cancelBooking = async (
 };
 
 
-const updateBookingStatus = async (
-  technicianId: string,
-  bookingId: string,
-  payload: TUpdateBookingStatus
-) => {
-  const booking = await prisma.booking.findFirst({
-    where: {
-      id: bookingId,
-      technicianId,
-    },
-  });
-
-  if (!booking) {
-    throw new Error("Booking not found");
-  }
-
-  // Allowed transitions
-  const allowedTransitions: Record<BookingStatus, BookingStatus[]> = {
-    REQUESTED: [BookingStatus.ACCEPTED, BookingStatus.DECLINED],
-    ACCEPTED: [BookingStatus.PAID],
-    PAID: [BookingStatus.IN_PROGRESS],
-    IN_PROGRESS: [BookingStatus.COMPLETED],
-    COMPLETED: [],
-    DECLINED: [],
-    CANCELLED: [],
-  };
-
-  const nextStatuses = allowedTransitions[booking.status];
-
-  if (!nextStatuses.includes(payload.status)) {
-    throw new Error(
-      `Cannot change booking status from ${booking.status} to ${payload.status}`
-    );
-  }
-
-  return prisma.booking.update({
-    where: {
-      id: bookingId,
-    },
-    data: {
-      status: payload.status,
-    },
-    include: {
-      customer: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          phone: true,
-        },
-      },
-      technician: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          phone: true,
-        },
-      },
-      service: true,
-      payment: true,
-      review: true,
-    },
-  });
-};
 
 export const BookingService = {
   createBooking,
   getMyBookings,
   getSingleBooking,
   cancelBooking,
-  updateBookingStatus,
 };

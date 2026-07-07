@@ -93,28 +93,6 @@ const getCategories = catchAsync(
 
 
 
-const createCategory = catchAsync(
-  async (req: Request, res: Response) => {
-
-    const result =
-      await AdminService.createCategory(
-        req.body
-      );
-
-
-    sendResponse(res, {
-      success: true,
-      statusCode: 201,
-      message: "Category created successfully",
-      data: result,
-    });
-
-  }
-);
-
-
-
-
 
 
 export const AdminController = {
@@ -123,6 +101,4 @@ export const AdminController = {
   updateUserStatus,
   getAllBookings,
   getCategories,
-  createCategory,
-
 };

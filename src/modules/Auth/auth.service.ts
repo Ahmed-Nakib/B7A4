@@ -38,15 +38,14 @@ const register = async (payload: TRegisterUser) => {
         role: payload.role,
       },
     });
-
-    // Create Technician Profile
+    
     if (payload.role === Role.TECHNICIAN) {
       await tx.technicianProfile.create({
         data: {
           userId: user.id,
           bio: "",
           experience: 0,
-          location: "Not Set", // অথবা payload.location ব্যবহার করতে পারো
+          location: "Not Set",
         },
       });
     }

@@ -40,12 +40,4 @@ router.get(
 
 
 
-router.post(
-  "/categories",
-  auth(Role.ADMIN),
-  AdminController.createCategory
-);
-
-
-
 export const AdminRoutes = router;

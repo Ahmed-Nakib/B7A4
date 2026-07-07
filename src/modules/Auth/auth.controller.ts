@@ -19,11 +19,17 @@ const register = catchAsync(async (req: Request, res: Response) => {
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
 
+  res.cookie("accessToken", result.accessToken, {
+    httpOnly: true,
+    secure: false, 
+    sameSite: "lax",
+   maxAge: 1000 * 60 * 60 * 24, // 1 day
+  });
   res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
     secure: false, 
     sameSite: "lax",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
   sendResponse(res, {
@@ -32,6 +38,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     message: AUTH_MESSAGE.LOGIN_SUCCESS,
     data: {
       accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
       user: result.user,
     },
   });

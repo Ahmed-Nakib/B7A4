@@ -55,8 +55,6 @@ const updateUserStatus = async (id: string, status: UserStatus) => {
 };
 
 
-
-
 const getAllBookings = async () => {
   return prisma.booking.findMany({
     include: {
@@ -96,7 +94,6 @@ const getAllBookings = async () => {
 
 
 
-
 const getCategories = async () => {
   return prisma.category.findMany({
     orderBy: {
@@ -105,44 +102,10 @@ const getCategories = async () => {
   });
 };
 
-const createCategory = async (payload: {
-  name: string;
-  icon?: string;
-  description?: string;
-}) => {
-  const isExist = await prisma.category.findUnique({
-    where: {
-      name: payload.name,
-    },
-  });
-
-  if (isExist) {
-    throw new Error("Category already exists");
-  }
-
-  const slug = slugify(payload.name, {
-    lower: true,
-    strict: true,
-    trim: true,
-  });
-
-  return prisma.category.create({
-    data: {
-      name: payload.name,
-
-      slug,
-
-      icon: payload.icon,
-
-      description: payload.description,
-    },
-  });
-};
 
 export const AdminService = {
   getAllUsers,
   updateUserStatus,
   getAllBookings,
   getCategories,
-  createCategory,
 };
