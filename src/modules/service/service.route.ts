@@ -1,12 +1,12 @@
 import { Router } from "express";
-import auth from "../../middleware/auth";
 import { Role } from "../../../generated/prisma/enums";
+import auth from "../../middleware/auth";
 import { ServiceController } from "./service.controller";
 
 const router = Router();
 
-// Public Routes
 router.get("/", ServiceController.getServices);
+
 
 router.get(
   "/my-services",
@@ -14,9 +14,6 @@ router.get(
   ServiceController.getMyServices
 );
 
-router.get("/:id", ServiceController.getSingleService);
-
-// Technician Routes
 router.post(
   "/",
   auth(Role.TECHNICIAN),
@@ -34,5 +31,7 @@ router.delete(
   auth(Role.TECHNICIAN),
   ServiceController.deleteService
 );
+
+router.get("/:id", ServiceController.getSingleService);
 
 export const ServiceRoutes = router;

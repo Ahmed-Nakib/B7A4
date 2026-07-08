@@ -4,6 +4,7 @@ export interface TCreateService {
   price: number;
   duration: number;
   categoryId: string;
+  isAvailable?: boolean;
 }
 
 export interface TUpdateService {

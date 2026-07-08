@@ -17,8 +17,8 @@ const createService = catchAsync(async (req: any, res: Response) => {
   });
 });
 
-const getServices = catchAsync(async (_req: Request, res: Response) => {
-  const result = await ServiceService.getServices();
+const getServices = catchAsync(async (req: Request, res: Response) => {
+  const result = await ServiceService.getServices(req.query);
 
   sendResponse(res, {
     success: true,
@@ -28,16 +28,20 @@ const getServices = catchAsync(async (_req: Request, res: Response) => {
   });
 });
 
-const getSingleService = catchAsync(async (req: Request, res: Response) => {
-  const result = await ServiceService.getSingleService(req.params.id as string);
+const getSingleService = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await ServiceService.getSingleService(
+      req.params.id as string
+    );
 
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "Service retrieved successfully",
-    data: result,
-  });
-});
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Service retrieved successfully",
+      data: result,
+    });
+  }
+);
 
 const getMyServices = catchAsync(async (req: any, res: Response) => {
   const result = await ServiceService.getMyServices(req.user.id);
@@ -66,7 +70,10 @@ const updateService = catchAsync(async (req: any, res: Response) => {
 });
 
 const deleteService = catchAsync(async (req: any, res: Response) => {
-  await ServiceService.deleteService(req.user.id, req.params.id);
+  await ServiceService.deleteService(
+    req.user.id,
+    req.params.id
+  );
 
   sendResponse(res, {
     success: true,

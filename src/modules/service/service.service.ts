@@ -1,10 +1,12 @@
+import { Prisma } from "../../../generated/prisma/browser";
 import { prisma } from "../../lib/prisma";
-import { TCreateService, TUpdateService } from "./service.interface";
+import { TCreateService } from "./service.interface";
 
 const createService = async (
   userId: string,
   payload: TCreateService
 ) => {
+  // Check technician profile
   const technician = await prisma.technicianProfile.findUnique({
     where: {
       userId,
@@ -15,6 +17,7 @@ const createService = async (
     throw new Error("Technician profile not found");
   }
 
+  // Check category
   const category = await prisma.category.findUnique({
     where: {
       id: payload.categoryId,
@@ -29,51 +32,181 @@ const createService = async (
     data: {
       title: payload.title,
       description: payload.description,
-      price: payload.price,
+      price: new Prisma.Decimal(payload.price),
       duration: payload.duration,
       technicianId: technician.id,
       categoryId: payload.categoryId,
     },
+
     include: {
-      category: true,
+      category: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          icon: true,
+        },
+      },
+
       technician: {
-        include: {
-          user: true,
+        select: {
+          id: true,
+          bio: true,
+          experience: true,
+          location: true,
+          averageRating: true,
+          completedJobs: true,
+
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              profileImg: true,
+            },
+          },
         },
       },
     },
   });
 };
 
-const getServices = async () => {
+const getServices = async (query: any) => {
+  const {
+    search,
+    category,
+    location,
+    rating,
+    minPrice,
+    maxPrice,
+  } = query;
+
   return prisma.service.findMany({
     where: {
       isAvailable: true,
+
+      //  Search by title or description
+      ...(search && {
+        OR: [
+          {
+            title: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            description: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      }),
+
+      // Filter by category name
+      ...(category && {
+        category: {
+          name: {
+            equals: category,
+            mode: "insensitive",
+          },
+        },
+      }),
+
+      // Filter by technician location
+      ...(location && {
+        technician: {
+          location: {
+            contains: location,
+            mode: "insensitive",
+          },
+        },
+      }),
+
+      // Filter by technician rating
+      ...(rating !== undefined && {
+        technician: {
+          averageRating: {
+            gte: Number(rating),
+          },
+        },
+      }),
+
+      // Filter by price range
+      ...((minPrice !== undefined || maxPrice !== undefined) && {
+        price: {
+          ...(minPrice !== undefined && {
+            gte: new Prisma.Decimal(minPrice),
+          }),
+          ...(maxPrice !== undefined && {
+            lte: new Prisma.Decimal(maxPrice),
+          }),
+        },
+      }),
     },
+
     include: {
-      category: true,
+      category: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          icon: true,
+        },
+      },
+
       technician: {
-        include: {
-          user: true,
+        select: {
+          id: true,
+          bio: true,
+          experience: true,
+          location: true,
+          averageRating: true,
+          completedJobs: true,
+
+          user: {
+            select: {
+              id: true,
+              name: true,
+              profileImg: true,
+            },
+          },
         },
       },
     },
+
     orderBy: {
       createdAt: "desc",
     },
   });
 };
 
-const getSingleService = async (id: string) => {
+const getSingleService = async (serviceId: string) => {
   const service = await prisma.service.findUnique({
     where: {
-      id,
+      id: serviceId,
     },
     include: {
       category: true,
+
       technician: {
-        include: {
-          user: true,
+        select: {
+          id: true,
+          bio: true,
+          experience: true,
+          location: true,
+          averageRating: true,
+          completedJobs: true,
+
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              profileImg: true,
+            },
+          },
         },
       },
     },
@@ -113,7 +246,7 @@ const getMyServices = async (userId: string) => {
 const updateService = async (
   userId: string,
   serviceId: string,
-  payload: TUpdateService
+  payload: Partial<TCreateService>
 ) => {
   const technician = await prisma.technicianProfile.findUnique({
     where: {
@@ -152,12 +285,50 @@ const updateService = async (
     where: {
       id: serviceId,
     },
-    data: payload,
+    data: {
+      ...(payload.title !== undefined && {
+        title: payload.title,
+      }),
+
+      ...(payload.description !== undefined && {
+        description: payload.description,
+      }),
+
+      ...(payload.price !== undefined && {
+        price: new Prisma.Decimal(payload.price),
+      }),
+
+      ...(payload.duration !== undefined && {
+        duration: payload.duration,
+      }),
+
+      ...(payload.categoryId !== undefined && {
+        categoryId: payload.categoryId,
+      }),
+
+      ...(payload.isAvailable !== undefined && {
+        isAvailable: payload.isAvailable,
+      }),
+    },
     include: {
       category: true,
       technician: {
-        include: {
-          user: true,
+        select: {
+          id: true,
+          bio: true,
+          experience: true,
+          location: true,
+          averageRating: true,
+          completedJobs: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              profileImg: true,
+            },
+          },
         },
       },
     },
