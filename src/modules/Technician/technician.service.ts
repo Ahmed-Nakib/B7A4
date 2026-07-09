@@ -1,3 +1,4 @@
+import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
 import {
   TUpdateAvailability,
@@ -9,8 +10,6 @@ const updateProfile = async (
   userId: string,
   payload: TUpdateTechnicianProfile
 ) => {
-
-  
   const profile = await prisma.technicianProfile.findUnique({
     where: {
       userId,
@@ -18,16 +17,16 @@ const updateProfile = async (
   });
 
   if (!profile) {
-    throw new Error("Technician profile not found");
+    const error: any = new Error("Technician profile not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   return prisma.technicianProfile.update({
     where: {
       userId,
     },
-    data: {
-      ...payload,
-    },
+    data: payload,
   });
 };
 
@@ -42,10 +41,11 @@ const updateAvailability = async (
   });
 
   if (!technician) {
-    throw new Error("Technician profile not found");
+    const error: any = new Error("Technician profile not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
-  // Optional: prevent duplicate availability
   const existingAvailability = await prisma.availability.findFirst({
     where: {
       technicianId: technician.id,
@@ -91,9 +91,29 @@ const getBookings = async (userId: string) => {
           phone: true,
         },
       },
-      service: true,
-      payment: true,
-      review: true,
+      service: {
+        select: {
+          id: true,
+          title: true,
+          price: true,
+        },
+      },
+      payment: {
+        select: {
+          id: true,
+          amount: true,
+          provider: true,
+          status: true,
+          paidAt: true,
+        },
+      },
+      review: {
+        select: {
+          id: true,
+          rating: true,
+          comment: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -114,7 +134,9 @@ const updateBookingStatus = async (
   });
 
   if (!booking) {
-    throw new Error("Booking not found");
+    const error: any = new Error("Booking not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   return prisma.booking.update({
@@ -125,8 +147,21 @@ const updateBookingStatus = async (
       status: payload.status,
     },
     include: {
-      customer: true,
-      service: true,
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
+      service: {
+        select: {
+          id: true,
+          title: true,
+          price: true,
+        },
+      },
     },
   });
 };

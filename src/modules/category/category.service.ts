@@ -1,3 +1,4 @@
+import httpStatus from "http-status";
 import slugify from "slugify";
 import { prisma } from "../../lib/prisma";
 
@@ -13,7 +14,9 @@ const createCategory = async (payload: {
   });
 
   if (isCategoryExist) {
-    throw new Error("Category already exists");
+    const error: any = new Error("Category already exists");
+    error.statusCode = httpStatus.CONFLICT;
+    throw error;
   }
 
   const slug = slugify(payload.name, {
@@ -55,7 +58,9 @@ const updateCategory = async (
   });
 
   if (!category) {
-    throw new Error("Category not found");
+    const error: any = new Error("Category not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   const slug = slugify(payload.name, {
@@ -74,7 +79,9 @@ const updateCategory = async (
   });
 
   if (isCategoryExist) {
-    throw new Error("Category already exists");
+    const error: any = new Error("Category already exists");
+    error.statusCode = httpStatus.CONFLICT;
+    throw error;
   }
 
   return prisma.category.update({
@@ -98,7 +105,23 @@ const deleteCategory = async (id: string) => {
   });
 
   if (!category) {
-    throw new Error("Category not found");
+    const error: any = new Error("Category not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
+  }
+
+  const service = await prisma.service.findFirst({
+    where: {
+      categoryId: id,
+    },
+  });
+
+  if (service) {
+    const error: any = new Error(
+      "Cannot delete category because services exist under this category."
+    );
+    error.statusCode = httpStatus.BAD_REQUEST;
+    throw error;
   }
 
   return prisma.category.delete({

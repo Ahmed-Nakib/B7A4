@@ -7,10 +7,16 @@ export const globalErrorHandler: ErrorRequestHandler = (
   err,
   req,
   res,
-  next
+  next,
 ) => {
   let statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
   let message = err.message || "Something went wrong";
+
+  // Custom Errors
+  if (err.statusCode) {
+    statusCode = err.statusCode;
+    message = err.message;
+  }
 
   // Prisma Errors
   if (
@@ -19,6 +25,14 @@ export const globalErrorHandler: ErrorRequestHandler = (
   ) {
     statusCode = httpStatus.CONFLICT;
     message = "Duplicate value found.";
+  }
+
+  if (
+    err instanceof Prisma.PrismaClientKnownRequestError &&
+    err.code === "P2003"
+  ) {
+    statusCode = httpStatus.BAD_REQUEST;
+    message = "Cannot delete because related data exists.";
   }
 
   if (err instanceof Prisma.PrismaClientValidationError) {

@@ -1,11 +1,9 @@
 import { Prisma } from "../../../generated/prisma/browser";
 import { prisma } from "../../lib/prisma";
 import { TCreateService } from "./service.interface";
+import httpStatus from "http-status";
 
-const createService = async (
-  userId: string,
-  payload: TCreateService
-) => {
+const createService = async (userId: string, payload: TCreateService) => {
   // Check technician profile
   const technician = await prisma.technicianProfile.findUnique({
     where: {
@@ -14,9 +12,10 @@ const createService = async (
   });
 
   if (!technician) {
-    throw new Error("Technician profile not found");
+    const error: any = new Error("Technician profile not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
-
   // Check category
   const category = await prisma.category.findUnique({
     where: {
@@ -25,7 +24,9 @@ const createService = async (
   });
 
   if (!category) {
-    throw new Error("Category not found");
+    const error: any = new Error("Category not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   return prisma.service.create({
@@ -72,14 +73,7 @@ const createService = async (
 };
 
 const getServices = async (query: any) => {
-  const {
-    search,
-    category,
-    location,
-    rating,
-    minPrice,
-    maxPrice,
-  } = query;
+  const { search, category, location, rating, minPrice, maxPrice } = query;
 
   return prisma.service.findMany({
     where: {
@@ -213,7 +207,9 @@ const getSingleService = async (serviceId: string) => {
   });
 
   if (!service) {
-    throw new Error("Service not found");
+    const error: any = new Error("Service not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   return service;
@@ -227,7 +223,9 @@ const getMyServices = async (userId: string) => {
   });
 
   if (!technician) {
-    throw new Error("Technician profile not found");
+    const error: any = new Error("Technician profile not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   return prisma.service.findMany({
@@ -246,7 +244,7 @@ const getMyServices = async (userId: string) => {
 const updateService = async (
   userId: string,
   serviceId: string,
-  payload: Partial<TCreateService>
+  payload: Partial<TCreateService>,
 ) => {
   const technician = await prisma.technicianProfile.findUnique({
     where: {
@@ -255,7 +253,9 @@ const updateService = async (
   });
 
   if (!technician) {
-    throw new Error("Technician profile not found");
+    const error: any = new Error("Technician profile not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   const service = await prisma.service.findFirst({
@@ -266,9 +266,10 @@ const updateService = async (
   });
 
   if (!service) {
-    throw new Error("Service not found");
+    const error: any = new Error("Service not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
-
   if (payload.categoryId) {
     const category = await prisma.category.findUnique({
       where: {
@@ -277,7 +278,9 @@ const updateService = async (
     });
 
     if (!category) {
-      throw new Error("Category not found");
+      const error: any = new Error("Category not found");
+      error.statusCode = httpStatus.NOT_FOUND;
+      throw error;
     }
   }
 
@@ -335,10 +338,7 @@ const updateService = async (
   });
 };
 
-const deleteService = async (
-  userId: string,
-  serviceId: string
-) => {
+const deleteService = async (userId: string, serviceId: string) => {
   const technician = await prisma.technicianProfile.findUnique({
     where: {
       userId,
@@ -346,7 +346,9 @@ const deleteService = async (
   });
 
   if (!technician) {
-    throw new Error("Technician profile not found");
+    const error: any = new Error("Technician profile not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   const service = await prisma.service.findFirst({
@@ -357,7 +359,9 @@ const deleteService = async (
   });
 
   if (!service) {
-    throw new Error("Service not found");
+    const error: any = new Error("Service not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   await prisma.service.delete({

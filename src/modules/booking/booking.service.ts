@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma";
 import {
   TCreateBooking,
 } from "./booking.interface";
+import httpStatus from "http-status";
 
 const createBooking = async (
   customerId: string,
@@ -16,8 +17,10 @@ const createBooking = async (
   });
 
   if (!customer) {
-    throw new Error("Customer not found");
-  }
+  const error: any = new Error("Customer not found");
+  error.statusCode = httpStatus.NOT_FOUND;
+  throw error;
+}
 
   // Service exists
   const service = await prisma.service.findUnique({
@@ -30,13 +33,16 @@ const createBooking = async (
   });
 
   if (!service) {
-    throw new Error("Service not found");
-  }
+  const error: any = new Error("Service not found");
+  error.statusCode = httpStatus.NOT_FOUND;
+  throw error;
+}
 
-  if (!service.isAvailable) {
-    throw new Error("Service is not available");
-  }
-
+ if (!service.isAvailable) {
+  const error: any = new Error("Service is not available");
+  error.statusCode = httpStatus.BAD_REQUEST;
+  throw error;
+}
   return prisma.booking.create({
     data: {
       customerId,
@@ -102,6 +108,8 @@ const getMyBookings = async (customerId: string) => {
     },
   });
 };
+
+
 const getSingleBooking = async (
   bookingId: string,
   userId: string,
@@ -141,8 +149,10 @@ const getSingleBooking = async (
   });
 
   if (!booking) {
-    throw new Error("Booking not found");
-  }
+  const error: any = new Error("Booking not found");
+  error.statusCode = httpStatus.NOT_FOUND;
+  throw error;
+}
 
   // Admin can access every booking
   if (role === "ADMIN") {
@@ -162,6 +172,8 @@ const getSingleBooking = async (
   throw new Error("Unauthorized access");
 };
 
+
+
 const cancelBooking = async (
   bookingId: string,
   customerId: string
@@ -174,29 +186,41 @@ const cancelBooking = async (
   });
 
   if (!booking) {
-    throw new Error("Booking not found");
+    const error: any = new Error("Booking not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
-  // Customer can't cancel after work starts
+  // Already cancelled
+  if (booking.status === BookingStatus.CANCELLED) {
+    const error: any = new Error("Booking is already cancelled.");
+    error.statusCode = httpStatus.BAD_REQUEST;
+    throw error;
+  }
+
+  // Cannot cancel after payment/work started/completed
   if (
+    booking.status === BookingStatus.PAID ||
     booking.status === BookingStatus.IN_PROGRESS ||
-    booking.status === BookingStatus.COMPLETED
+    booking.status === BookingStatus.COMPLETED ||
+    booking.status === BookingStatus.ACCEPTED
   ) {
-    throw new Error(
-      "Booking cannot be cancelled after work has started"
+    const error: any = new Error(
+      "Booking cannot be cancelled at this stage."
     );
+    error.statusCode = httpStatus.BAD_REQUEST;
+    throw error;
   }
 
   return prisma.booking.update({
     where: {
-      id: bookingId,
+      id: booking.id,
     },
     data: {
       status: BookingStatus.CANCELLED,
     },
   });
 };
-
 
 
 export const BookingService = {

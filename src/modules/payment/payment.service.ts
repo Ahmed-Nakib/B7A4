@@ -3,20 +3,14 @@ import qs from "qs";
 import crypto from "crypto";
 
 import { Prisma } from "../../../generated/prisma/browser";
-import {
-  BookingStatus,
-  PaymentStatus,
-} from "../../../generated/prisma/enums";
+import { BookingStatus, PaymentStatus } from "../../../generated/prisma/enums";
 
 import { prisma } from "../../lib/prisma";
 import config from "../../config";
 import { TCreatePayment } from "./payment.interface";
+import httpStatus from "http-status";
 
-const createPayment = async (
-  customerId: string,
-  payload: TCreatePayment
-) => {
-  // Check booking
+const createPayment = async (customerId: string, payload: TCreatePayment) => {
   const booking = await prisma.booking.findFirst({
     where: {
       id: payload.bookingId,
@@ -34,9 +28,11 @@ const createPayment = async (
   });
 
   if (!booking) {
-    throw new Error(
-      "Booking not found or booking is not accepted."
+    const error: any = new Error(
+      "Booking not found or booking is not accepted.",
     );
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   // Prevent duplicate payment
@@ -47,17 +43,14 @@ const createPayment = async (
   });
 
   if (existingPayment) {
-    throw new Error(
-      "Payment already exists for this booking."
-    );
+    const error: any = new Error("Payment already exists for this booking.");
+    error.statusCode = httpStatus.CONFLICT;
+    throw error;
   }
 
   // Generate Transaction ID
   const transactionId =
-    "TXN-" +
-    Date.now() +
-    "-" +
-    crypto.randomBytes(4).toString("hex");
+    "TXN-" + Date.now() + "-" + crypto.randomBytes(4).toString("hex");
 
   // Save Payment
   await prisma.payment.create({
@@ -105,8 +98,7 @@ const createPayment = async (
     cus_state: "Dhaka",
     cus_postcode: "1207",
     cus_country: "Bangladesh",
-    cus_phone:
-      booking.customer.phone ?? "01700000000",
+    cus_phone: booking.customer.phone ?? "01700000000",
     cus_fax: "",
 
     ship_name: booking.customer.name,
@@ -123,18 +115,16 @@ const createPayment = async (
     qs.stringify(paymentData),
     {
       headers: {
-        "Content-Type":
-          "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-    }
+    },
   );
 
   if (!response.data?.GatewayPageURL) {
-    throw new Error(
-      "Failed to initialize SSLCommerz payment."
-    );
+    const error: any = new Error("Failed to initialize SSLCommerz payment.");
+    error.statusCode = httpStatus.BAD_GATEWAY;
+    throw error;
   }
-
   return {
     transactionId,
     paymentUrl: response.data.GatewayPageURL,
@@ -149,7 +139,9 @@ const confirmPayment = async (transactionId: string) => {
   });
 
   if (!payment) {
-    throw new Error("Payment not found");
+    const error: any = new Error("Payment not found");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   if (payment.status === PaymentStatus.COMPLETED) {
@@ -190,7 +182,9 @@ const failPayment = async (tranId: string) => {
   });
 
   if (!payment) {
-    throw new Error("Payment not found.");
+    const error: any = new Error("Payment not found.");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   return prisma.payment.update({
@@ -237,10 +231,7 @@ const getMyPayments = async (customerId: string) => {
   });
 };
 
-const getSinglePayment = async (
-  customerId: string,
-  paymentId: string
-) => {
+const getSinglePayment = async (customerId: string, paymentId: string) => {
   const payment = await prisma.payment.findFirst({
     where: {
       id: paymentId,
@@ -271,7 +262,9 @@ const getSinglePayment = async (
   });
 
   if (!payment) {
-    throw new Error("Payment not found.");
+    const error: any = new Error("Payment not found.");
+    error.statusCode = httpStatus.NOT_FOUND;
+    throw error;
   }
 
   return payment;

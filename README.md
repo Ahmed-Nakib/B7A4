@@ -2,9 +2,9 @@
 
 # 🔧 FixItNow Backend API
 
-A scalable Home Service Marketplace Backend built with **Node.js, Express.js, TypeScript, PostgreSQL, Prisma ORM, JWT Authentication, and SSLCommerz Payment Gateway**.
+A scalable and secure **Home Service Marketplace REST API** built with **Node.js, Express.js, TypeScript, PostgreSQL, Prisma ORM, JWT Authentication, and SSLCommerz Payment Gateway**.
 
-Programming Hero - Assignment 4
+### Programming Hero - Level 2 Web Development | Assignment 4
 
 ![Node.js](https://img.shields.io/badge/Node.js-22.x-green?logo=node.js)
 ![Express](https://img.shields.io/badge/Express.js-Backend-black?logo=express)
@@ -18,21 +18,27 @@ Programming Hero - Assignment 4
 
 ---
 
-# 📌 Overview
+# 📌 Project Overview
 
-FixItNow is a RESTful backend API for a home service marketplace where customers can book services from technicians, technicians can manage their services and bookings, and administrators can manage users, categories, and the overall system.
+**FixItNow** is a complete backend system for a Home Service Marketplace.
+
+Customers can browse services, create bookings, make online payments, and leave reviews.
+
+Technicians can manage their services, update availability, and handle bookings.
+
+Administrators can manage users, bookings, and service categories.
 
 ---
 
 # 🚀 Live API
 
 ```
-https://your-api.vercel.app
+https://your-live-api.vercel.app
 ```
 
 ---
 
-# 📂 GitHub Repository
+# 💻 GitHub Repository
 
 ```
 https://github.com/your-username/fixitnow-backend
@@ -40,9 +46,7 @@ https://github.com/your-username/fixitnow-backend
 
 ---
 
-# 📑 API Documentation
-
-Postman Documentation
+# 📬 Postman Documentation
 
 ```
 https://documenter.getpostman.com/view/xxxxxxxx
@@ -50,41 +54,53 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 ---
 
-# 🎯 Features
+# 📹 Video Demonstration
+
+```
+https://drive.google.com/your-video-link
+```
+
+---
+
+# ✨ Features
 
 - JWT Authentication
 - Refresh Token Authentication
-- Role-Based Authorization
-- Customer Booking System
-- Technician Service Management
-- Category Management
-- Review System
-- SSLCommerz Payment Gateway
-- Booking Payment Tracking
+- Role Based Authorization
+- Customer Registration & Login
+- Technician Registration & Profile Management
+- Admin Dashboard APIs
+- Service Category Management
+- Home Service Management
+- Booking System
+- Booking Status Management
+- SSLCommerz Payment Integration
+- Review & Rating System
+- Availability Management
 - Prisma ORM
 - PostgreSQL Database
-- Cookie Authentication
-- Password Hashing (bcrypt)
-- Structured Error Handling
-- Input Validation
-- TypeScript
+- Password Hashing using bcrypt
+- Cookie Based Authentication
+- Global Error Handling
+- Structured API Response
+- TypeScript Support
 
 ---
 
 # 🛠 Tech Stack
 
-| Technology | Purpose |
-|------------|----------|
-| Node.js | Runtime |
-| Express.js | REST API |
+| Technology | Description |
+|------------|-------------|
+| Node.js | JavaScript Runtime |
+| Express.js | REST API Framework |
 | TypeScript | Type Safety |
-| PostgreSQL | Database |
-| Prisma ORM | ORM |
+| PostgreSQL | Relational Database |
+| Prisma ORM | Database ORM |
 | JWT | Authentication |
 | bcrypt | Password Hashing |
 | Cookie Parser | Cookie Management |
-| CORS | Cross-Origin Support |
-| SSLCommerz | Payment Gateway |
+| CORS | Cross Origin Support |
+| SSLCommerz | Online Payment Gateway |
 
 ---
 
@@ -94,30 +110,31 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 - Register/Login
 - Browse Services
-- Book Services
+- Create Booking
 - Cancel Booking
-- Pay Online
-- Give Review
+- Make Online Payment
+- View Payment History
+- Submit Review
 
 ---
 
 ## 👨‍🔧 Technician
 
 - Update Profile
-- Update Availability
+- Manage Availability
 - Create Service
 - Update Service
 - Delete Service
-- Manage Bookings
+- View Assigned Bookings
+- Update Booking Status
 
 ---
 
 ## 👑 Admin
 
 - View All Users
-- Ban / Unban Users
+- Block / Unblock Users
 - View All Bookings
-- View Categories
 - Manage Categories
 
 ---
@@ -128,10 +145,10 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| POST | /api/auth/register | Public |
-| POST | /api/auth/login | Public |
-| POST | /api/auth/refresh-token | Public |
-| GET | /api/auth/me | Authenticated |
+| POST | `/api/auth/register` | Public |
+| POST | `/api/auth/login` | Public |
+| POST | `/api/auth/refresh-token` | Public |
+| GET | `/api/auth/me` | Authenticated |
 
 ---
 
@@ -139,10 +156,10 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| GET | /api/categories | Public |
-| POST | /api/categories | Admin |
-| PATCH | /api/categories/:id | Admin |
-| DELETE | /api/categories/:id | Admin |
+| GET | `/api/categories` | Public |
+| POST | `/api/categories` | Admin |
+| PATCH | `/api/categories/:id` | Admin |
+| DELETE | `/api/categories/:id` | Admin |
 
 ---
 
@@ -150,12 +167,12 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| GET | /api/services | Public |
-| GET | /api/services/:id | Public |
-| GET | /api/services/my-services | Technician |
-| POST | /api/services | Technician |
-| PATCH | /api/services/:id | Technician |
-| DELETE | /api/services/:id | Technician |
+| GET | `/api/services` | Public |
+| GET | `/api/services/:id` | Public |
+| GET | `/api/services/my-services` | Technician |
+| POST | `/api/services` | Technician |
+| PATCH | `/api/services/:id` | Technician |
+| DELETE | `/api/services/:id` | Technician |
 
 ---
 
@@ -163,10 +180,10 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| PUT | /api/technician/profile | Technician |
-| PUT | /api/technician/availability | Technician |
-| GET | /api/technician/bookings | Technician |
-| PATCH | /api/technician/bookings/:id | Technician |
+| PUT | `/api/technician/profile` | Technician |
+| PUT | `/api/technician/availability` | Technician |
+| GET | `/api/technician/bookings` | Technician |
+| PATCH | `/api/technician/bookings/:id` | Technician |
 
 ---
 
@@ -174,10 +191,10 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| POST | /api/bookings | Customer |
-| GET | /api/bookings | Customer |
-| GET | /api/bookings/:id | Customer / Technician / Admin |
-| PATCH | /api/bookings/:id/cancel | Customer |
+| POST | `/api/bookings` | Customer |
+| GET | `/api/bookings` | Customer |
+| GET | `/api/bookings/:id` | Customer / Technician / Admin |
+| PATCH | `/api/bookings/:id/cancel` | Customer |
 
 ---
 
@@ -185,12 +202,11 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| POST | /api/payments/create | Customer |
-| POST | /api/payments/confirm | Public |
-| POST | /api/payments/success | SSLCommerz Callback |
-| POST | /api/payments/fail | SSLCommerz Callback |
-| GET | /api/payments | Customer |
-| GET | /api/payments/:id | Customer |
+| POST | `/api/payments/create` | Customer |
+| POST | `/api/payments/success` | SSLCommerz Callback |
+| POST | `/api/payments/fail` | SSLCommerz Callback |
+| GET | `/api/payments` | Customer |
+| GET | `/api/payments/:id` | Customer |
 
 ---
 
@@ -198,7 +214,7 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| POST | /api/reviews | Customer |
+| POST | `/api/reviews` | Customer |
 
 ---
 
@@ -206,16 +222,16 @@ https://documenter.getpostman.com/view/xxxxxxxx
 
 | Method | Endpoint | Access |
 |---------|----------|--------|
-| GET | /api/admin/users | Admin |
-| PATCH | /api/admin/users/:id | Admin |
-| GET | /api/admin/bookings | Admin |
-| GET | /api/admin/categories | Admin |
+| GET | `/api/admin/users` | Admin |
+| PATCH | `/api/admin/users/:id` | Admin |
+| GET | `/api/admin/bookings` | Admin |
+| GET | `/api/admin/categories` | Admin |
 
 ---
 
 # 🔐 Authentication
 
-Protected routes require JWT Access Token.
+All protected APIs require an Access Token.
 
 ```
 Authorization: Bearer <access_token>
@@ -225,62 +241,67 @@ Authorization: Bearer <access_token>
 
 # 💳 Payment Workflow
 
-```
+```text
 Customer
-      │
-      ▼
+    │
+    ▼
 Create Booking
-      │
-      ▼
+    │
+    ▼
+Booking Accepted
+    │
+    ▼
 Create Payment
-      │
-      ▼
+    │
+    ▼
 SSLCommerz Checkout
-      │
- ┌────┴────┐
- │         │
- ▼         ▼
-Success   Failed
+    │
+ ┌──┴────────────┐
+ │               │
+ ▼               ▼
+Success        Failed
+ │
+ ▼
+Payment Completed
  │
  ▼
 Booking Status → PAID
- │
- ▼
-Payment Status → COMPLETED
 ```
 
 ---
 
 # 📂 Folder Structure
 
-```
+```text
 src
 │
 ├── app
 │   ├── config
 │   ├── middleware
-│   ├── modules
-│   │
-│   ├── Auth
-│   ├── Admin
-│   ├── Booking
-│   ├── Category
-│   ├── Payment
-│   ├── Review
-│   ├── Service
-│   └── Technician
+│   ├── routes
+│   ├── utils
+│   ├── lib
+│   └── modules
+│       ├── auth
+│       ├── admin
+│       ├── booking
+│       ├── category
+│       ├── payment
+│       ├── review
+│       ├── service
+│       └── technician
 │
 ├── prisma
 │
-├── server.ts
-└── app.ts
+├── app.ts
+└── server.ts
 ```
 
 ---
 
 # ⚙️ Environment Variables
 
-Create a `.env` file
+Create a `.env` file.
 
 ```env
 PORT=5000
@@ -298,8 +319,8 @@ BCRYPT_SALT_ROUNDS=10
 SSLCOMMERZ_STORE_ID=
 SSLCOMMERZ_STORE_PASSWORD=
 
-BACKEND_URL=
 APP_URL=
+BACKEND_URL=
 ```
 
 ---
@@ -312,13 +333,13 @@ Clone Repository
 git clone https://github.com/your-username/fixitnow-backend.git
 ```
 
-Go to Project
+Move to project
 
 ```bash
 cd fixitnow-backend
 ```
 
-Install Dependencies
+Install dependencies
 
 ```bash
 npm install
@@ -330,13 +351,13 @@ Generate Prisma Client
 npx prisma generate
 ```
 
-Run Migration
+Run Database Migration
 
 ```bash
 npx prisma migrate dev
 ```
 
-Run Development Server
+Start Development Server
 
 ```bash
 npm run dev
@@ -344,25 +365,26 @@ npm run dev
 
 ---
 
-# 📌 Response Format
+# ✅ API Response Format
 
-## Success Response
+### Success Response
 
 ```json
 {
   "success": true,
+  "statusCode": 200,
   "message": "Operation successful",
   "data": {}
 }
 ```
 
-## Error Response
+### Error Response
 
 ```json
 {
   "success": false,
-  "message": "Validation Error",
-  "errorDetails": {}
+  "statusCode": 400,
+  "message": "Validation Error"
 }
 ```
 
@@ -380,18 +402,10 @@ Admin@123
 
 ---
 
-# 🧪 Tested With
+# 🧪 Tested Using
 
 - Postman
 - Prisma Studio
-
----
-
-# 📹 Demo Video
-
-```
-https://drive.google.com/your-video-link
-```
 
 ---
 
@@ -399,14 +413,24 @@ https://drive.google.com/your-video-link
 
 ## Ahmed Nakib
 
-Programming Hero Backend Assignment 4
+Programming Hero - Backend Assignment 4
 
-GitHub:
+GitHub
 
 ```
 https://github.com/your-username
 ```
 
+LinkedIn
+
+```
+https://linkedin.com/in/your-profile
+```
+
 ---
 
-## ⭐ If you like this project, don't forget to give it a Star.
+<div align="center">
+
+### ⭐ If you like this project, please give it a Star on GitHub!
+
+</div>

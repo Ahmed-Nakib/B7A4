@@ -1,3 +1,4 @@
+import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
 import { TCreateReview } from "./review.interface";
 
@@ -5,7 +6,6 @@ const createReview = async (
   customerId: string,
   payload: TCreateReview
 ) => {
-  // Check completed booking
   const booking = await prisma.booking.findFirst({
     where: {
       id: payload.bookingId,
@@ -15,12 +15,13 @@ const createReview = async (
   });
 
   if (!booking) {
-    throw new Error(
+    const error: any = new Error(
       "Review can only be submitted after a completed booking."
     );
+    error.statusCode = httpStatus.BAD_REQUEST;
+    throw error;
   }
 
-  // Prevent duplicate review
   const existingReview = await prisma.review.findUnique({
     where: {
       bookingId: payload.bookingId,
@@ -28,11 +29,12 @@ const createReview = async (
   });
 
   if (existingReview) {
-    throw new Error("Review already submitted.");
+    const error: any = new Error("Review already submitted.");
+    error.statusCode = httpStatus.CONFLICT;
+    throw error;
   }
 
   return prisma.$transaction(async (tx) => {
-    // Create review
     const review = await tx.review.create({
       data: {
         bookingId: booking.id,
@@ -43,7 +45,6 @@ const createReview = async (
       },
     });
 
-    // Calculate average rating
     const rating = await tx.review.aggregate({
       where: {
         technicianId: booking.technicianId,
@@ -53,7 +54,6 @@ const createReview = async (
       },
     });
 
-    // Update technician profile
     await tx.technicianProfile.update({
       where: {
         userId: booking.technicianId,
