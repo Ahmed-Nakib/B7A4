@@ -12,21 +12,42 @@ const createPayment = catchAsync(async (req: any, res: Response) => {
   sendResponse(res, {
     success: true,
     statusCode: 201,
-    message: "Payment created successfully",
+    message: "Payment session created successfully",
     data: result,
   });
 });
 
-const confirmPayment = catchAsync(async (req: Request, res: Response) => {
-  const result = await PaymentService.confirmPayment(req.body);
+const confirmPayment = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await PaymentService.confirmPayment(
+      req.body.transactionId
+    );
 
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "Payment confirmed successfully",
-    data: result,
-  });
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Payment confirmed successfully",
+      data: result,
+    });
+  }
+);
+
+const successPayment = catchAsync(async (req: Request, res: Response) => {
+  await PaymentService.successPayment(req.body.tran_id);
+
+  res.redirect(
+    "http://localhost:3000/payment/success"
+  );
 });
+
+const failPayment = catchAsync(async (req: Request, res: Response) => {
+  await PaymentService.failPayment(req.body.tran_id);
+
+  res.redirect(
+    "http://localhost:3000/payment/fail"
+  );
+});
+
 
 const getMyPayments = catchAsync(async (req: any, res: Response) => {
   const result = await PaymentService.getMyPayments(req.user.id);
@@ -56,6 +77,8 @@ const getSinglePayment = catchAsync(async (req: any, res: Response) => {
 export const PaymentController = {
   createPayment,
   confirmPayment,
+  successPayment,
+  failPayment,
   getMyPayments,
   getSinglePayment,
 };
