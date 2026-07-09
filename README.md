@@ -2,9 +2,9 @@
 
 # 🔧 FixItNow Backend API
 
-A scalable and secure **Home Service Marketplace REST API** built with **Node.js, Express.js, TypeScript, PostgreSQL, Prisma ORM, JWT Authentication, and SSLCommerz Payment Gateway**.
+A scalable and secure **Home Service Marketplace REST API** built with **Node.js**, **Express.js**, **TypeScript**, **PostgreSQL**, **Prisma ORM**, **JWT Authentication**, and **SSLCommerz Payment Gateway**.
 
-### Programming Hero - Level 2 Web Development | Assignment 4
+### Programming Hero | Level-2 Web Development | Assignment 4
 
 ![Node.js](https://img.shields.io/badge/Node.js-22.x-green?logo=node.js)
 ![Express](https://img.shields.io/badge/Express.js-Backend-black?logo=express)
@@ -20,45 +20,33 @@ A scalable and secure **Home Service Marketplace REST API** built with **Node.js
 
 # 📌 Project Overview
 
-**FixItNow** is a complete backend system for a Home Service Marketplace.
-
-Customers can browse services, create bookings, make online payments, and leave reviews.
-
-Technicians can manage their services, update availability, and handle bookings.
-
-Administrators can manage users, bookings, and service categories.
+FixItNow is a secure and scalable Home Service Marketplace backend where customers can book home services, technicians can manage services and bookings, and administrators can manage the overall platform.
 
 ---
 
 # 🚀 Live API
 
-```
-https://fixitnow-backend-gamma.vercel.app/
-```
+### 🌍 https://fixitnow-backend-gamma.vercel.app/
+
+### 👉 **[Open Live API](https://fixitnow-backend-gamma.vercel.app/)**
 
 ---
 
 # 💻 GitHub Repository
 
-```
-https://github.com/Ahmed-Nakib/B7A4
-```
+### 👉 **[GitHub Repository](https://github.com/Ahmed-Nakib/B7A4)**
 
 ---
 
 # 📬 Postman Documentation
 
-```
-https://office-nakib-1196023.postman.co/workspace/Personal-Workspace~c9aada3b-7dea-4669-95da-04ee8c845410/collection/48128323-7ffb42ba-d353-4c23-9bb7-86875f194d22?action=share&source=copy-link&creator=48128323
-```
+### 👉 **[View Postman Collection](https://office-nakib-1196023.postman.co/workspace/Personal-Workspace~c9aada3b-7dea-4669-95da-04ee8c845410/collection/48128323-7ffb42ba-d353-4c23-9bb7-86875f194d22?action=share&source=copy-link&creator=48128323)**
 
 ---
 
 # 📹 Video Demonstration
 
-```
-https://drive.google.com/your-video-link
-```
+### 👉 **[Watch Project Demo](https://drive.google.com/file/d/15taS_u3LKgliB8JUsB8GACx7ConJ1mbx/view?usp=sharing)**
 
 ---
 
@@ -66,23 +54,23 @@ https://drive.google.com/your-video-link
 
 - JWT Authentication
 - Refresh Token Authentication
+- Cookie Based Authentication
 - Role Based Authorization
 - Customer Registration & Login
 - Technician Registration & Profile Management
-- Admin Dashboard APIs
-- Service Category Management
+- Category Management
 - Home Service Management
 - Booking System
 - Booking Status Management
 - SSLCommerz Payment Integration
+- Payment History
 - Review & Rating System
 - Availability Management
 - Prisma ORM
 - PostgreSQL Database
-- Password Hashing using bcrypt
-- Cookie Based Authentication
+- Password Hashing with bcrypt
 - Global Error Handling
-- Structured API Response
+- Structured API Responses
 - TypeScript Support
 
 ---
@@ -92,15 +80,15 @@ https://drive.google.com/your-video-link
 | Technology | Description |
 |------------|-------------|
 | Node.js | JavaScript Runtime |
-| Express.js | REST API Framework |
+| Express.js | Backend Framework |
 | TypeScript | Type Safety |
 | PostgreSQL | Relational Database |
-| Prisma ORM | Database ORM |
+| Prisma ORM | ORM |
 | JWT | Authentication |
 | bcrypt | Password Hashing |
-| Cookie Parser | Cookie Management |
-| CORS | Cross Origin Support |
-| SSLCommerz | Online Payment Gateway |
+| Cookie Parser | Cookie Handling |
+| CORS | Cross Origin |
+| SSLCommerz | Payment Gateway |
 
 ---
 
@@ -108,13 +96,14 @@ https://drive.google.com/your-video-link
 
 ## 👤 Customer
 
-- Register/Login
+- Register
+- Login
 - Browse Services
-- Create Booking
+- Book Services
 - Cancel Booking
-- Make Online Payment
+- Make Payment
 - View Payment History
-- Submit Review
+- Submit Reviews
 
 ---
 
@@ -231,9 +220,9 @@ https://drive.google.com/your-video-link
 
 # 🔐 Authentication
 
-All protected APIs require an Access Token.
+Protected APIs require an Access Token.
 
-```
+```http
 Authorization: Bearer <access_token>
 ```
 
@@ -278,18 +267,10 @@ src
 ├── app
 │   ├── config
 │   ├── middleware
+│   ├── modules
 │   ├── routes
 │   ├── utils
-│   ├── lib
-│   └── modules
-│       ├── auth
-│       ├── admin
-│       ├── booking
-│       ├── category
-│       ├── payment
-│       ├── review
-│       ├── service
-│       └── technician
+│   └── lib
 │
 ├── prisma
 │
@@ -330,16 +311,16 @@ BACKEND_URL=
 Clone Repository
 
 ```bash
-git clone https://github.com/your-username/fixitnow-backend.git
+git clone https://github.com/Ahmed-Nakib/B7A4.git
 ```
 
-Move to project
+Go to project
 
 ```bash
-cd fixitnow-backend
+cd B7A4
 ```
 
-Install dependencies
+Install packages
 
 ```bash
 npm install
@@ -351,7 +332,7 @@ Generate Prisma Client
 npx prisma generate
 ```
 
-Run Database Migration
+Run Migration
 
 ```bash
 npx prisma migrate dev
@@ -365,9 +346,9 @@ npm run dev
 
 ---
 
-# ✅ API Response Format
+# ✅ API Response
 
-### Success Response
+### Success
 
 ```json
 {
@@ -378,7 +359,7 @@ npm run dev
 }
 ```
 
-### Error Response
+### Error
 
 ```json
 {
@@ -393,16 +374,13 @@ npm run dev
 # 👤 Admin Credentials
 
 ```
-Email:
-admin@gmail.com
-
-Password:
-Admin@123
+Email: admin@gmail.com
+Password: Admin@123
 ```
 
 ---
 
-# 🧪 Tested Using
+# 🧪 Tested With
 
 - Postman
 - Prisma Studio
@@ -415,22 +393,20 @@ Admin@123
 
 Programming Hero - Backend Assignment 4
 
-GitHub
+### 🌐 GitHub
 
-```
-https://github.com/your-username
-```
+https://github.com/Ahmed-Nakib
 
-LinkedIn
+### 💼 LinkedIn
 
-```
-https://linkedin.com/in/your-profile
-```
+https://linkedin.com/in/your-linkedin
 
 ---
 
 <div align="center">
 
-### ⭐ If you like this project, please give it a Star on GitHub!
+### ⭐ If you like this project, don't forget to Star this repository.
+
+Made with ❤️ by Ahmed Nakib
 
 </div>
