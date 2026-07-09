@@ -33,7 +33,7 @@ Administrators can manage users, bookings, and service categories.
 # 🚀 Live API
 
 ```
-https://your-live-api.vercel.app
+https://fixitnow-backend-gamma.vercel.app/
 ```
 
 ---
@@ -41,7 +41,7 @@ https://your-live-api.vercel.app
 # 💻 GitHub Repository
 
 ```
-https://github.com/your-username/fixitnow-backend
+https://github.com/Ahmed-Nakib/B7A4
 ```
 
 ---
@@ -49,7 +49,7 @@ https://github.com/your-username/fixitnow-backend
 # 📬 Postman Documentation
 
 ```
-https://documenter.getpostman.com/view/xxxxxxxx
+https://office-nakib-1196023.postman.co/workspace/Personal-Workspace~c9aada3b-7dea-4669-95da-04ee8c845410/collection/48128323-7ffb42ba-d353-4c23-9bb7-86875f194d22?action=share&source=copy-link&creator=48128323
 ```
 
 ---
