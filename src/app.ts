@@ -25,6 +25,13 @@ app.use(cors({
 }))
 
 
+app.get("/", (req,res)=>{
+   res.json({
+      success:true,
+      message:"FixItNow API Running"
+   })
+})
+
 app.use("/api/auth", AuthRoutes)
 app.use("/api/categories", CategoryRoutes)
 app.use("/api/technician", TechnicianRoutes)
