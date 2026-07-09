@@ -5,15 +5,15 @@ import bcrypt from "bcryptjs";
 import { TLoginUser, TRegisterUser } from "./auth.interface";
 import { Role } from "../../../generated/prisma/enums";
 import { jwtUtils } from "../../utils/jwt";
+import httpStatus from "http-status";
 
 const register = async (payload: TRegisterUser) => {
-  if (
-    payload.role !== Role.CUSTOMER &&
-    payload.role !== Role.TECHNICIAN
-  ) {
-    throw new Error(
-      "Only CUSTOMER and TECHNICIAN registration is allowed."
+  if (payload.role !== Role.CUSTOMER && payload.role !== Role.TECHNICIAN) {
+    const error: any = new Error(
+      "Only CUSTOMER and TECHNICIAN registration is allowed.",
     );
+    error.statusCode = httpStatus.BAD_REQUEST;
+    throw error;
   }
 
   const isUserExist = await prisma.user.findUnique({
@@ -23,13 +23,14 @@ const register = async (payload: TRegisterUser) => {
   });
 
   if (isUserExist) {
-    throw new Error("User already exists");
+    const error: any = new Error("User already exists");
+    error.statusCode = httpStatus.CONFLICT;
+    throw error;
   }
 
   const hashedPassword = await bcrypt.hash(payload.password, 10);
 
   const result = await prisma.$transaction(async (tx) => {
-    // Create User
     const user = await tx.user.create({
       data: {
         name: payload.name,
@@ -38,7 +39,7 @@ const register = async (payload: TRegisterUser) => {
         role: payload.role,
       },
     });
-    
+
     if (payload.role === Role.TECHNICIAN) {
       await tx.technicianProfile.create({
         data: {
@@ -64,6 +65,7 @@ const register = async (payload: TRegisterUser) => {
 };
 
 
+
 const login = async (payload: TLoginUser) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -72,18 +74,21 @@ const login = async (payload: TLoginUser) => {
   });
 
   if (!user) {
-    throw new Error("Invalid email or password");
+    const error: any = new Error("Invalid email or password");
+    error.statusCode = httpStatus.UNAUTHORIZED;
+    throw error;
   }
 
   const isPasswordMatched = await bcrypt.compare(
     payload.password,
-    user.password
+    user.password,
   );
 
   if (!isPasswordMatched) {
-    throw new Error("Invalid email or password");
+    const error: any = new Error("Invalid email or password");
+    error.statusCode = httpStatus.UNAUTHORIZED;
+    throw error;
   }
-
   const accessToken = jwtUtils.createToken(
     {
       id: user.id,
@@ -91,7 +96,7 @@ const login = async (payload: TLoginUser) => {
       role: user.role,
     },
     config.jwt_access_secret,
-    config.jwt_access_expires_in as SignOptions
+    config.jwt_access_expires_in as SignOptions,
   );
 
   const refreshToken = jwtUtils.createToken(
@@ -99,7 +104,7 @@ const login = async (payload: TLoginUser) => {
       id: user.id,
     },
     config.jwt_refresh_secret,
-    config.jwt_refresh_expires_in as SignOptions
+    config.jwt_refresh_expires_in as SignOptions,
   );
 
   const { password, ...userData } = user;
@@ -111,10 +116,12 @@ const login = async (payload: TLoginUser) => {
   };
 };
 
+
+
 const refreshToken = async (refreshToken: string) => {
   const verifiedRefreshToken = jwtUtils.verifyToken(
     refreshToken,
-    config.jwt_refresh_secret
+    config.jwt_refresh_secret,
   );
 
   if (!verifiedRefreshToken.success) {
@@ -144,13 +151,14 @@ const refreshToken = async (refreshToken: string) => {
       role: user.role,
     },
     config.jwt_access_secret,
-    config.jwt_access_expires_in as SignOptions
+    config.jwt_access_expires_in as SignOptions,
   );
 
   return {
     accessToken,
   };
 };
+
 
 const getMe = async (id: string) => {
   return prisma.user.findUnique({
@@ -175,5 +183,5 @@ export const AuthService = {
   register,
   login,
   getMe,
-  refreshToken
+  refreshToken,
 };

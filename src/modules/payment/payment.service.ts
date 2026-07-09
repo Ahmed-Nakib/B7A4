@@ -182,46 +182,6 @@ const confirmPayment = async (transactionId: string) => {
   return result;
 };
 
-
-const successPayment = async (tranId: string) => {
-  const payment = await prisma.payment.findUnique({
-    where: {
-      transactionId: tranId,
-    },
-  });
-
-  if (!payment) {
-    throw new Error("Payment not found.");
-  }
-
-  if (payment.status === PaymentStatus.COMPLETED) {
-    return payment;
-  }
-
-  return prisma.$transaction(async (tx) => {
-    const updatedPayment = await tx.payment.update({
-      where: {
-        id: payment.id,
-      },
-      data: {
-        status: PaymentStatus.COMPLETED,
-        paidAt: new Date(),
-      },
-    });
-
-    await tx.booking.update({
-      where: {
-        id: payment.bookingId,
-      },
-      data: {
-        status: BookingStatus.PAID,
-      },
-    });
-
-    return updatedPayment;
-  });
-};
-
 const failPayment = async (tranId: string) => {
   const payment = await prisma.payment.findUnique({
     where: {
@@ -320,7 +280,6 @@ const getSinglePayment = async (
 export const PaymentService = {
   createPayment,
   confirmPayment,
-  successPayment,
   failPayment,
   getMyPayments,
   getSinglePayment,

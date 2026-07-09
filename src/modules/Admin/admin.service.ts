@@ -1,8 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import slugify from "slugify";
-import { UserStatus } from "../../../generated/prisma/enums";
-
-
+import { Role, UserStatus } from "../../../generated/prisma/enums";
 
 const getAllUsers = async () => {
   return prisma.user.findMany({
@@ -31,7 +28,14 @@ const updateUserStatus = async (id: string, status: UserStatus) => {
   });
 
   if (!user) {
-    throw new Error("User not found");
+    const error: any = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  if (user.role === Role.ADMIN) {
+    const error: any = new Error("Admin cannot be blocked.");
+    error.statusCode = 400;
+    throw error;
   }
 
   return prisma.user.update({
@@ -54,45 +58,58 @@ const updateUserStatus = async (id: string, status: UserStatus) => {
   });
 };
 
-
 const getAllBookings = async () => {
   return prisma.booking.findMany({
-    include: {
-      customer: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
+  include: {
+    customer: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
       },
-
-      technician: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-
-      service: {
-        select: {
-          id: true,
-          title: true,
-          price: true,
-        },
-      },
-
-      payment: true,
-      review: true,
     },
 
-    orderBy: {
-      createdAt: "desc",
+    technician: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     },
-  });
+
+    service: {
+      select: {
+        id: true,
+        title: true,
+        price: true,
+      },
+    },
+
+    payment: {
+      select: {
+        id: true,
+        amount: true,
+        provider: true,
+        transactionId: true,
+        status: true,
+        paidAt: true,
+      },
+    },
+
+    review: {
+      select: {
+        id: true,
+        rating: true,
+        comment: true,
+      },
+    },
+  },
+
+  orderBy: {
+    createdAt: "desc",
+  },
+});
 };
-
-
 
 const getCategories = async () => {
   return prisma.category.findMany({
@@ -101,7 +118,6 @@ const getCategories = async () => {
     },
   });
 };
-
 
 export const AdminService = {
   getAllUsers,

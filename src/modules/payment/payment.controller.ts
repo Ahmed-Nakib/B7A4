@@ -32,13 +32,6 @@ const confirmPayment = catchAsync(
   }
 );
 
-const successPayment = catchAsync(async (req: Request, res: Response) => {
-  await PaymentService.successPayment(req.body.tran_id);
-
-  res.redirect(
-    "http://localhost:3000/payment/success"
-  );
-});
 
 const failPayment = catchAsync(async (req: Request, res: Response) => {
   await PaymentService.failPayment(req.body.tran_id);
@@ -47,7 +40,6 @@ const failPayment = catchAsync(async (req: Request, res: Response) => {
     "http://localhost:3000/payment/fail"
   );
 });
-
 
 const getMyPayments = catchAsync(async (req: any, res: Response) => {
   const result = await PaymentService.getMyPayments(req.user.id);
@@ -77,7 +69,6 @@ const getSinglePayment = catchAsync(async (req: any, res: Response) => {
 export const PaymentController = {
   createPayment,
   confirmPayment,
-  successPayment,
   failPayment,
   getMyPayments,
   getSinglePayment,

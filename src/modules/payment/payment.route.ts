@@ -4,8 +4,6 @@ import { Role } from "../../../generated/prisma/enums";
 import { PaymentController } from "./payment.controller";
 
 const router = Router();
-
-// Customer
 router.post(
   "/create",
   auth(Role.CUSTOMER),
@@ -28,10 +26,8 @@ router.get(
   PaymentController.getSinglePayment
 );
 
-// SSLCommerz Callback
-router.post("/success", PaymentController.successPayment);
-
 router.post("/fail", PaymentController.failPayment);
+
 
 
 export const PaymentRoutes = router;
