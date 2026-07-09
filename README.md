@@ -28,7 +28,7 @@ FixItNow is a secure and scalable Home Service Marketplace backend where custome
 
 ### 🌍 https://fixitnow-backend-gamma.vercel.app/
 
-### 👉 **[Open Live API](https://fixitnow-backend-gamma.vercel.app/)**
+### 👉 **[Open Live API](https://fixitnow-backend-gamma.vercel.app)**
 
 ---
 
@@ -40,7 +40,7 @@ FixItNow is a secure and scalable Home Service Marketplace backend where custome
 
 # 📬 Postman Documentation
 
-### 👉 **[View Postman Collection](https://office-nakib-1196023.postman.co/workspace/Personal-Workspace~c9aada3b-7dea-4669-95da-04ee8c845410/collection/48128323-7ffb42ba-d353-4c23-9bb7-86875f194d22?action=share&source=copy-link&creator=48128323)**
+### 👉 **[View Postman Collection](https://office-nakib-1196023.postman.co/workspace/Nakibul-Islam's-Workspace~59ba4c6c-68d7-4687-8a2b-4b7e47eae95b/collection/48128323-7ffb42ba-d353-4c23-9bb7-86875f194d22?action=share&creator=48128323&live=3wahys9a40)**
 
 ---
 
